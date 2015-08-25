@@ -12,7 +12,7 @@ apply plugin: 'jacoco'
 
 mainClassName = 'me.grumbler.sampler.Main'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_7
 
 repositories {
     mavenCentral()
