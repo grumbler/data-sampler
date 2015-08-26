@@ -7,6 +7,7 @@ import org.kohsuke.args4j.OptionHandlerFilter;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -17,15 +18,19 @@ import java.util.Random;
  * sampler
  * me.grumbler.sampler
  */
-public class Main {
+public class SamplerRunner {
 
-    private static int BUFFER_SIZE = 2048;
+    private static final int BUFFER_SIZE = 2048;
     @Option(
             name = "--emulate",
-            usage = "Set flag to use internal random stream",
-            hidden = true
+            usage = "Set flag to use internal random stream"
     )
     private boolean emulateStream;
+    @Option(
+            name = "--emulate-length",
+            usage = "Bytes to generate, defaults to 2048"
+    )
+    private int emulatorStreamLength = BUFFER_SIZE;
     @Option(
             name = "--generator",
             usage = "Random generator (defaults to classic Random)"
@@ -44,7 +49,7 @@ public class Main {
     private int sampleLength;
 
     public static void main(String[] args) throws Exception {
-        int code = new Main().doMain(args);
+        int code = new SamplerRunner().doMain(args);
         System.exit(code);
     }
 
@@ -79,9 +84,17 @@ public class Main {
             return 2;
         }
 
-        Sampler sampler = new Sampler(this.getGenerator(), this.sampleLength);
+        RandomWrapper generator = this.getGenerator();
+        Sampler sampler = new Sampler(generator, this.sampleLength);
+        InputStream inputStream;
+        if (emulateStream) {
+            InputEmulator inputEmulator = new InputEmulator(generator);
+            inputStream = new EmulatorStream(inputEmulator, emulatorStreamLength, BUFFER_SIZE);
+        } else {
+            inputStream = System.in;
+        }
 
-        try (BufferedInputStream stream = new BufferedInputStream(System.in, BUFFER_SIZE)) {
+        try (BufferedInputStream stream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
             int readBytes;
             do {
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -98,7 +111,7 @@ public class Main {
         byte[] res;
         try {
             res = sampler.getResult();
-        } catch (Sampler.NotEnoughDataException e) {
+        } catch (NotEnoughDataException e) {
             System.err.println(e.getMessage());
             return -1;
         }
