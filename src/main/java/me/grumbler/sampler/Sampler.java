@@ -2,6 +2,7 @@ package me.grumbler.sampler;
 
 /**
  * Produces data sample, using given RNG
+ * This class is intentionally left thread-unsafe
  * sampler
  * me.grumbler.sampler
  */
@@ -55,12 +56,6 @@ public class Sampler {
             throw new NotEnoughDataException("Not enough data to produce sample");
         }
         return this.result;
-    }
-
-    public class NotEnoughDataException extends Exception {
-        public NotEnoughDataException(String message) {
-            super(message);
-        }
     }
 
 }
