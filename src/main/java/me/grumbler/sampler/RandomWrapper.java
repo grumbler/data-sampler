@@ -35,4 +35,14 @@ public class RandomWrapper {
 
         return val;
     }
+
+    /**
+     * Proxies call for nextLong
+     *
+     * @return long - random within 0 and n
+     * @throws IllegalArgumentException - in case of negative bound
+     */
+    public long nextLong() {
+        return this.rng.nextLong();
+    }
 }
