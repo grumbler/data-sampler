@@ -15,14 +15,19 @@ Stream to be consumed:
  * internal emulator (produces given number of bytes). emulator uses the same RNG, as for the algorithm.
  
 Whole program left thread-unsafe for simplicity.
+
 Another option was to implement with PipeInput(Output)Stream and several threads.
 This way was intentionally discarded, since the whole app would be more error-prone and complicated.
 
 ## Build
 Thanks to Gradle wrapper, there is nothing really difficult here.
+
 Make sure you have JAVA_HOME env variable set to JDK 1.7/1.8
+
 Run `./gradlew check` to build and run tests
+
 Run `./gradlew installApp` to build and produce directory with ready-to-run application.
+
 `./build/install/sampler/bin/sampler` is the target script.
 
 ## Usage
