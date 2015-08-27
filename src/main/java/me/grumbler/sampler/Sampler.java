@@ -1,5 +1,7 @@
 package me.grumbler.sampler;
 
+import java.util.ArrayList;
+
 /**
  * Produces data sample, using given RNG
  * This class is intentionally left thread-unsafe
@@ -50,12 +52,15 @@ public class Sampler {
      * @throws NotEnoughDataException - if there wasn't
      *                                enough data processed to produce the sample
      */
-    public byte[] getResult() throws NotEnoughDataException {
-        //TODO: this doesn't seem to be a good idea to return field..
+    public ArrayList<Byte> getResult() throws NotEnoughDataException {
         if (this.count < this.sampleSize) {
             throw new NotEnoughDataException("Not enough data to produce sample");
         }
-        return this.result;
+        ArrayList<Byte> res = new ArrayList<>(this.sampleSize);
+        for (byte b : this.result) {
+            res.add(b);
+        }
+        return res;
     }
 
 }

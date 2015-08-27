@@ -41,6 +41,7 @@ public class EmulatorStream extends InputStream {
         Byte b = bufferIterator.next();
         bufferIterator.remove();
         count++;
+        // TODO: unboxing here. mb it's better to use plain array
         return (int) b;
     }
 }
